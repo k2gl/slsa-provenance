@@ -2,7 +2,9 @@
 
 A faithful, typed PHP implementation of the
 [SLSA Provenance v1](https://slsa.dev/spec/v1.0/provenance) predicate
-(`https://slsa.dev/provenance/v1`), built on
+(`https://slsa.dev/provenance/v1`) and the legacy
+[v0.2](https://slsa.dev/provenance/v0.2) predicate still carried by most
+real-world bundles, built on
 [`k2gl/in-toto-attestation`](https://github.com/k2gl/in-toto-attestation).
 
 SLSA Provenance describes *how* an artifact was built — the build definition (inputs)
@@ -61,6 +63,44 @@ $provenance = Provenance::fromStatement($statement);   // checks predicateType
 $provenance->buildDefinition->buildType;          // 'https://example.com/buildtypes/v1'
 $provenance->runDetails->builder->id;             // 'https://github.com/actions/runner'
 $provenance->runDetails->metadata?->invocationId; // 'run-42'
+```
+
+## SLSA Provenance v0.2
+
+Most provenance found in real Sigstore bundles is the older `v0.2` predicate
+(`https://slsa.dev/provenance/v0.2`), which has a different shape from v1. It lives
+under `K2gl\Slsa\V02` with its own typed value objects:
+
+```php
+use K2gl\InToto\Statement;
+use K2gl\Slsa\V02\Provenance;
+
+$statement  = Statement::fromEnvelope($envelope);   // verify signatures first
+$provenance = Provenance::fromStatement($statement);
+
+$provenance->builder->id;                              // 'https://github.com/…'
+$provenance->buildType;                                // 'https://…/generic@v1'
+$provenance->invocation?->configSource?->uri;          // 'git+https://github.com/…'
+$provenance->metadata?->completeness?->parameters;     // true
+$provenance->materials[0]->digest;                     // ['sha1' => '…']
+```
+
+Building one wraps it in an in-toto Statement **v0.1** by default — the version
+real-world v0.2 provenance is paired with. The two versions are orthogonal, so the
+Statement version can be overridden:
+
+```php
+use K2gl\InToto\StatementVersion;
+use K2gl\Slsa\V02\Builder;
+use K2gl\Slsa\V02\Provenance;
+
+$provenance = new Provenance(
+    builder: new Builder(id: 'https://github.com/actions/runner'),
+    buildType: 'https://github.com/slsa-framework/slsa-github-generator/generic@v1',
+);
+
+$statement = $provenance->toStatement([$subject]);                       // in-toto Statement v0.1
+$statement = $provenance->toStatement([$subject], StatementVersion::V1); // …or v1
 ```
 
 ## License

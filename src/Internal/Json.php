@@ -38,6 +38,19 @@ final class Json
         return $value;
     }
 
+    /** @param array<mixed> $data */
+    public static function boolOrNull(array $data, string $key): ?bool
+    {
+        $value = $data[$key] ?? null;
+        if ($value === null) {
+            return null;
+        }
+        if (!is_bool($value)) {
+            throw new InvalidProvenanceException(sprintf('"%s" must be a boolean.', $key));
+        }
+        return $value;
+    }
+
     /**
      * @param array<mixed> $data
      * @return array<string, mixed>
