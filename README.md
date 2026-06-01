@@ -1,5 +1,11 @@
 # k2gl/slsa-provenance
 
+[![CI](https://img.shields.io/github/actions/workflow/status/k2gl/slsa-provenance/ci.yml?branch=main&label=CI&logo=github)](https://github.com/k2gl/slsa-provenance/actions/workflows/ci.yml)
+[![Latest Stable Version](https://img.shields.io/packagist/v/k2gl/slsa-provenance?logo=packagist&logoColor=white)](https://packagist.org/packages/k2gl/slsa-provenance)
+[![Total Downloads](https://img.shields.io/packagist/dt/k2gl/slsa-provenance?logo=packagist&logoColor=white)](https://packagist.org/packages/k2gl/slsa-provenance)
+[![PHPStan Level](https://img.shields.io/badge/PHPStan-level%209-2a5ea7?logo=php&logoColor=white)](https://phpstan.org)
+[![License](https://img.shields.io/packagist/l/k2gl/slsa-provenance?color=yellowgreen)](https://packagist.org/packages/k2gl/slsa-provenance)
+
 A faithful, typed PHP implementation of the
 [SLSA Provenance v1](https://slsa.dev/spec/v1.0/provenance) predicate
 (`https://slsa.dev/provenance/v1`) and the legacy

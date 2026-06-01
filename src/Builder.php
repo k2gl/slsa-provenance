@@ -33,15 +33,18 @@ final class Builder
     public function toArray(): array
     {
         $out = ['id' => $this->id];
+
         if ($this->builderDependencies !== []) {
             $out['builderDependencies'] = array_map(
                 static fn (ResourceDescriptor $descriptor): array => $descriptor->toArray(),
                 $this->builderDependencies,
             );
         }
+
         if ($this->version !== null) {
             $out['version'] = Json::jsonObject($this->version);
         }
+
         return $out;
     }
 

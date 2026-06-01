@@ -20,22 +20,24 @@ final class RunDetails
         public readonly Builder $builder,
         public readonly ?BuildMetadata $metadata = null,
         public readonly array $byproducts = [],
-    ) {
-    }
+    ) {}
 
     /** @return array<string, mixed> */
     public function toArray(): array
     {
         $out = ['builder' => $this->builder->toArray()];
+
         if ($this->metadata !== null) {
             $out['metadata'] = Json::jsonObject($this->metadata->toArray());
         }
+
         if ($this->byproducts !== []) {
             $out['byproducts'] = array_map(
                 static fn (ResourceDescriptor $descriptor): array => $descriptor->toArray(),
                 $this->byproducts,
             );
         }
+
         return $out;
     }
 

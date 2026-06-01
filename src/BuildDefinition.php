@@ -38,15 +38,18 @@ final class BuildDefinition
             'buildType' => $this->buildType,
             'externalParameters' => Json::jsonObject($this->externalParameters),
         ];
+
         if ($this->internalParameters !== null) {
             $out['internalParameters'] = Json::jsonObject($this->internalParameters);
         }
+
         if ($this->resolvedDependencies !== []) {
             $out['resolvedDependencies'] = array_map(
                 static fn (ResourceDescriptor $descriptor): array => $descriptor->toArray(),
                 $this->resolvedDependencies,
             );
         }
+
         return $out;
     }
 

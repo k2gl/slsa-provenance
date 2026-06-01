@@ -19,8 +19,7 @@ final class ConfigSource
         public readonly ?string $uri = null,
         public readonly array $digest = [],
         public readonly ?string $entryPoint = null,
-    ) {
-    }
+    ) {}
 
     /** @return array<string, mixed> */
     public function toArray(): array

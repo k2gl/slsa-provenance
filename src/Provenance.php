@@ -23,8 +23,7 @@ final class Provenance
     public function __construct(
         public readonly BuildDefinition $buildDefinition,
         public readonly RunDetails $runDetails,
-    ) {
-    }
+    ) {}
 
     /** @return array<string, mixed> */
     public function toArray(): array
@@ -56,6 +55,7 @@ final class Provenance
                 self::PREDICATE_TYPE,
             ));
         }
+
         return self::fromArray($statement->predicate);
     }
 

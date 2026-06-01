@@ -20,8 +20,7 @@ final class Metadata
         public readonly ?string $buildFinishedOn = null,
         public readonly ?Completeness $completeness = null,
         public readonly ?bool $reproducible = null,
-    ) {
-    }
+    ) {}
 
     /** @return array<string, mixed> */
     public function toArray(): array

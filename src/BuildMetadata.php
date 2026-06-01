@@ -17,22 +17,25 @@ final class BuildMetadata
         public readonly ?string $invocationId = null,
         public readonly ?string $startedOn = null,
         public readonly ?string $finishedOn = null,
-    ) {
-    }
+    ) {}
 
     /** @return array<string, mixed> */
     public function toArray(): array
     {
         $out = [];
+
         if ($this->invocationId !== null) {
             $out['invocationId'] = $this->invocationId;
         }
+
         if ($this->startedOn !== null) {
             $out['startedOn'] = $this->startedOn;
         }
+
         if ($this->finishedOn !== null) {
             $out['finishedOn'] = $this->finishedOn;
         }
+
         return $out;
     }
 

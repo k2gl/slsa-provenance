@@ -6,9 +6,6 @@ namespace K2gl\Slsa\Tests;
 
 use K2gl\InToto\ResourceDescriptor;
 use K2gl\InToto\Statement;
-
-use function K2gl\PHPUnitFluentAssertions\fact;
-
 use K2gl\Slsa\BuildDefinition;
 use K2gl\Slsa\Builder;
 use K2gl\Slsa\BuildMetadata;
@@ -18,6 +15,8 @@ use K2gl\Slsa\Provenance;
 use K2gl\Slsa\RunDetails;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
+
+use function K2gl\PHPUnitFluentAssertions\fact;
 
 #[CoversClass(Provenance::class)]
 #[CoversClass(BuildDefinition::class)]

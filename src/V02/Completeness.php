@@ -18,8 +18,7 @@ final class Completeness
         public readonly ?bool $parameters = null,
         public readonly ?bool $environment = null,
         public readonly ?bool $materials = null,
-    ) {
-    }
+    ) {}
 
     /** @return array<string, mixed> */
     public function toArray(): array

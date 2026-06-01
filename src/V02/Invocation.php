@@ -22,8 +22,7 @@ final class Invocation
         public readonly ?ConfigSource $configSource = null,
         public readonly ?array $parameters = null,
         public readonly ?array $environment = null,
-    ) {
-    }
+    ) {}
 
     /** @return array<string, mixed> */
     public function toArray(): array

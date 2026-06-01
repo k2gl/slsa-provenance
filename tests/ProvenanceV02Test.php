@@ -7,9 +7,6 @@ namespace K2gl\Slsa\Tests;
 use K2gl\InToto\ResourceDescriptor;
 use K2gl\InToto\Statement;
 use K2gl\InToto\StatementVersion;
-
-use function K2gl\PHPUnitFluentAssertions\fact;
-
 use K2gl\Slsa\Exception\InvalidProvenanceException;
 use K2gl\Slsa\Internal\Json;
 use K2gl\Slsa\V02\Builder;
@@ -20,6 +17,8 @@ use K2gl\Slsa\V02\Metadata;
 use K2gl\Slsa\V02\Provenance;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
+
+use function K2gl\PHPUnitFluentAssertions\fact;
 
 #[CoversClass(Provenance::class)]
 #[CoversClass(Builder::class)]
