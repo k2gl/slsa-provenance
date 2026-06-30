@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.0
+
+- `Provenance` (v1) and `V02\Provenance` now implement the `Predicate` interface from
+  `k2gl/in-toto-attestation`, and `Predicates::register()` registers both with a
+  `PredicateRegistry`. After registering, `Statement::predicate()` resolves a SLSA
+  provenance statement to the typed `Provenance` object. Requires
+  `k2gl/in-toto-attestation ^1.2`.
+
 ## 1.1.0
 
 - **SLSA Provenance v0.2** predicate (`https://slsa.dev/provenance/v0.2`) modelled

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace K2gl\Slsa;
 
+use K2gl\InToto\Predicate;
 use K2gl\InToto\ResourceDescriptor;
 use K2gl\InToto\Statement;
 use K2gl\Slsa\Exception\InvalidProvenanceException;
@@ -16,7 +17,7 @@ use K2gl\Slsa\Internal\Json;
  *
  * @see https://slsa.dev/spec/v1.0/provenance
  */
-final class Provenance
+final class Provenance implements Predicate
 {
     public const PREDICATE_TYPE = 'https://slsa.dev/provenance/v1';
 
@@ -24,6 +25,11 @@ final class Provenance
         public readonly BuildDefinition $buildDefinition,
         public readonly RunDetails $runDetails,
     ) {}
+
+    public function predicateType(): string
+    {
+        return self::PREDICATE_TYPE;
+    }
 
     /** @return array<string, mixed> */
     public function toArray(): array
