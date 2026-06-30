@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace K2gl\Slsa\V02;
 
+use K2gl\InToto\Predicate;
 use K2gl\InToto\ResourceDescriptor;
 use K2gl\InToto\Statement;
 use K2gl\InToto\StatementVersion;
@@ -21,7 +22,7 @@ use K2gl\Slsa\Internal\Json;
  *
  * @see https://slsa.dev/provenance/v0.2
  */
-final class Provenance
+final class Provenance implements Predicate
 {
     public const PREDICATE_TYPE = 'https://slsa.dev/provenance/v0.2';
 
@@ -40,6 +41,11 @@ final class Provenance
         if ($buildType === '') {
             throw new InvalidProvenanceException('"buildType" must be a non-empty URI.');
         }
+    }
+
+    public function predicateType(): string
+    {
+        return self::PREDICATE_TYPE;
     }
 
     /** @return array<string, mixed> */

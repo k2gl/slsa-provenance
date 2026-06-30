@@ -109,6 +109,26 @@ $statement = $provenance->toStatement([$subject]);                       // in-t
 $statement = $provenance->toStatement([$subject], StatementVersion::V1); // …or v1
 ```
 
+## Predicate registry
+
+Register the SLSA predicate types so in-toto's `Statement::predicate()` returns a typed
+`Provenance` instead of a raw array:
+
+```php
+use K2gl\InToto\Statement;
+use K2gl\Slsa\Predicates;
+use K2gl\Slsa\Provenance;
+
+Predicates::register();                  // registers v1 + v0.2 in the shared registry
+
+$statement = Statement::fromEnvelope($envelope);
+$predicate = $statement->predicate();    // a K2gl\Slsa\Provenance (or V02\Provenance), else the raw array
+
+if ($predicate instanceof Provenance) {
+    echo $predicate->buildDefinition->buildType;
+}
+```
+
 ## License
 
 MIT — see [LICENSE](LICENSE). Independent, clean-room implementation of the SLSA

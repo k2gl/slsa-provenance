@@ -26,7 +26,7 @@
   },
   "require": {
     "php": ">=8.1",
-    "k2gl/in-toto-attestation": "^1.1"
+    "k2gl/in-toto-attestation": "^1.2"
   },
   "require-dev": {
     "phpunit/phpunit": "^10|^11|^12",
