@@ -6,12 +6,8 @@
 [![PHPStan Level](https://img.shields.io/badge/PHPStan-level%209-2a5ea7?logo=php&logoColor=white)](https://phpstan.org)
 [![License](https://img.shields.io/packagist/l/k2gl/slsa-provenance?color=yellowgreen)](https://packagist.org/packages/k2gl/slsa-provenance)
 
-A faithful, typed PHP implementation of the
-[SLSA Provenance v1](https://slsa.dev/spec/v1.0/provenance) predicate
-(`https://slsa.dev/provenance/v1`) and the legacy
-[v0.2](https://slsa.dev/provenance/v0.2) predicate still carried by most
-real-world bundles, built on
-[`k2gl/in-toto-attestation`](https://github.com/k2gl/in-toto-attestation).
+Typed SLSA Provenance predicates for PHP, both the current v1 and the legacy v0.2 that most
+real-world bundles still carry. Built on in-toto attestations.
 
 SLSA Provenance describes *how* an artifact was built — the build definition (inputs)
 and the run details (who built it, when, and what came out). This package models that
