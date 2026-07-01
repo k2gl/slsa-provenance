@@ -1,6 +1,6 @@
 {
   "name": "k2gl/slsa-provenance",
-  "description": "Faithful, typed PHP implementation of the SLSA Provenance v1 and v0.2 predicates, built on k2gl/in-toto-attestation.",
+  "description": "SLSA Provenance predicates (v1 and v0.2) for PHP.",
   "homepage": "https://github.com/k2gl/slsa-provenance",
   "type": "library",
   "license": "MIT",
