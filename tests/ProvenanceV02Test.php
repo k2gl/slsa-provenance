@@ -155,37 +155,41 @@ final class ProvenanceV02Test extends TestCase
 
     public function testRejectsEmptyBuildType(): void
     {
-        $this->expectException(InvalidProvenanceException::class);
-        new Provenance(builder: new Builder(id: 'https://ci.example.com/b'), buildType: '');
+        // act + assert
+        fact(static fn () => new Provenance(builder: new Builder(id: 'https://ci.example.com/b'), buildType: ''))
+            ->throws(InvalidProvenanceException::class);
     }
 
     public function testRejectsEmptyBuilderId(): void
     {
-        $this->expectException(InvalidProvenanceException::class);
-        new Builder(id: '');
+        // act + assert
+        fact(static fn () => new Builder(id: ''))->throws(InvalidProvenanceException::class);
     }
 
     public function testFromStatementRejectsWrongPredicateType(): void
     {
+        // arrange
         $statement = new Statement(
             [new ResourceDescriptor(digest: ['sha256' => 'x'])],
             'https://slsa.dev/provenance/v1',
             [],
         );
 
-        $this->expectException(InvalidProvenanceException::class);
-        Provenance::fromStatement($statement);
+        // act + assert
+        fact(static fn () => Provenance::fromStatement($statement))->throws(InvalidProvenanceException::class);
     }
 
     public function testRejectsMissingBuilder(): void
     {
-        $this->expectException(InvalidProvenanceException::class);
-        Provenance::fromArray(['buildType' => 'https://example.com/bt']);
+        // act + assert
+        fact(static fn () => Provenance::fromArray(['buildType' => 'https://example.com/bt']))
+            ->throws(InvalidProvenanceException::class);
     }
 
     public function testRejectsMissingBuildType(): void
     {
-        $this->expectException(InvalidProvenanceException::class);
-        Provenance::fromArray(['builder' => ['id' => 'https://ci.example.com/b']]);
+        // act + assert
+        fact(static fn () => Provenance::fromArray(['builder' => ['id' => 'https://ci.example.com/b']]))
+            ->throws(InvalidProvenanceException::class);
     }
 }
