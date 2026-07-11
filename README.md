@@ -105,17 +105,62 @@ $statement = $provenance->toStatement([$subject]);                       // in-t
 $statement = $provenance->toStatement([$subject], StatementVersion::V1); // …or v1
 ```
 
+## Verification Summary (VSA)
+
+Where provenance says *how* an artifact was built, a **Verification Summary Attestation**
+(`https://slsa.dev/verification_summary/v1`) records that a verifier *checked* it against a
+policy — which SLSA levels it reached and whether it passed. This is the attestation a
+verifier emits, carried by an in-toto Statement **v1**:
+
+```php
+use K2gl\InToto\ResourceDescriptor;
+use K2gl\Slsa\VerificationResult;
+use K2gl\Slsa\VerificationSummary;
+use K2gl\Slsa\Verifier;
+
+$vsa = new VerificationSummary(
+    verifier: new Verifier(id: 'https://github.com/slsa-framework/slsa-verifier', version: ['slsa-verifier' => 'v2.4.1']),
+    timeVerified: '2026-07-11T12:00:00Z',
+    resourceUri: 'pkg:composer/k2gl/dsse@1.3.0',
+    policy: new ResourceDescriptor(uri: 'https://example.com/policy.yaml', digest: ['sha256' => '…']),
+    verificationResult: VerificationResult::Passed,
+    verifiedLevels: ['SLSA_BUILD_LEVEL_3'],
+    slsaVersion: '1.0',
+    dependencyLevels: ['SLSA_BUILD_LEVEL_3' => 5],   // optional
+);
+
+$statement = $vsa->toStatement([
+    new ResourceDescriptor(name: 'dsse.zip', digest: ['sha256' => '…']),
+]);
+$envelope = $statement->sign($signer);
+```
+
+Parsing back (after verifying the envelope's signatures):
+
+```php
+use K2gl\InToto\Statement;
+use K2gl\Slsa\VerificationResult;
+use K2gl\Slsa\VerificationSummary;
+
+$statement = Statement::fromEnvelope($envelope);
+$vsa       = VerificationSummary::fromStatement($statement);   // checks predicateType
+
+$vsa->verificationResult === VerificationResult::Passed;  // true
+$vsa->verifiedLevels;                                     // ['SLSA_BUILD_LEVEL_3']
+$vsa->policy->digestFor('sha256');                        // '…'
+```
+
 ## Predicate registry
 
 Register the SLSA predicate types so in-toto's `Statement::predicate()` returns a typed
-`Provenance` instead of a raw array:
+object instead of a raw array:
 
 ```php
 use K2gl\InToto\Statement;
 use K2gl\Slsa\Predicates;
 use K2gl\Slsa\Provenance;
 
-Predicates::register();                  // registers v1 + v0.2 in the shared registry
+Predicates::register();                  // registers v1, v0.2 and VSA in the shared registry
 
 $statement = Statement::fromEnvelope($envelope);
 $predicate = $statement->predicate();    // a K2gl\Slsa\Provenance (or V02\Provenance), else the raw array
