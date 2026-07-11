@@ -132,6 +132,58 @@ final class Json
 
     /**
      * @param array<mixed> $data
+     * @return array<string, int>|null
+     */
+    public static function intMapOrNull(array $data, string $key): ?array
+    {
+        $value = $data[$key] ?? null;
+
+        if ($value === null) {
+            return null;
+        }
+
+        if (! is_array($value)) {
+            throw new InvalidProvenanceException(sprintf('"%s" must be an object of integers.', $key));
+        }
+
+        $map = [];
+
+        foreach ($value as $name => $item) {
+            if (! is_int($item)) {
+                throw new InvalidProvenanceException(sprintf('"%s" values must be integers.', $key));
+            }
+            $map[(string) $name] = $item;
+        }
+
+        return $map;
+    }
+
+    /**
+     * @param array<mixed> $data
+     * @return list<string>
+     */
+    public static function stringList(array $data, string $key): array
+    {
+        $value = $data[$key] ?? null;
+
+        if (! is_array($value) || ($value !== [] && ! array_is_list($value))) {
+            throw new InvalidProvenanceException(sprintf('"%s" must be an array of strings.', $key));
+        }
+
+        $list = [];
+
+        foreach ($value as $item) {
+            if (! is_string($item) || $item === '') {
+                throw new InvalidProvenanceException(sprintf('"%s" values must be non-empty strings.', $key));
+            }
+            $list[] = $item;
+        }
+
+        return $list;
+    }
+
+    /**
+     * @param array<mixed> $data
      * @return list<ResourceDescriptor>
      */
     public static function descriptors(array $data, string $key): array

@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.3.0
+
+- **SLSA Verification Summary Attestation (VSA) v1** predicate
+  (`https://slsa.dev/verification_summary/v1`) — the attestation a verifier emits
+  after checking an artifact against a policy: which SLSA levels it reached and
+  whether it passed. New `VerificationSummary` predicate with the same
+  `fromArray()`/`toArray()`/`toStatement()`/`fromStatement()` shape as the provenance
+  predicates, wrapping into an in-toto Statement v1 by default. Typed `Verifier`
+  value object and a `VerificationResult` enum (`PASSED`/`FAILED`); `policy` and
+  `inputAttestations` reuse `k2gl/in-toto-attestation`'s `ResourceDescriptor`.
+- `Predicates::register()` now also registers the VSA type, so
+  `Statement::predicate()` resolves a VSA statement to the typed object. The v1/v0.2
+  API is unchanged.
+
 ## 1.2.0
 
 - `Provenance` (v1) and `V02\Provenance` now implement the `Predicate` interface from
