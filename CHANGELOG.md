@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.1
+
+- VSA: `timeVerified` and `slsaVersion` are optional in the spec (both since v1.1), but
+  parsing required them and threw on a summary that left either out — Source-track VSAs
+  routinely do. Both are now nullable and omitted from `toArray()` when absent.
+
 ## 1.3.0
 
 - **SLSA Verification Summary Attestation (VSA) v1** predicate

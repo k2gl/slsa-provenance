@@ -17,25 +17,31 @@ use K2gl\Slsa\Internal\Json;
  * it reached and whether it passed. It is carried as the predicate of an in-toto
  * Statement with predicate type "https://slsa.dev/verification_summary/v1".
  *
- * @see https://slsa.dev/spec/v1.0/verification_summary
+ * The same predicate serves the Build track and the Source track approved in
+ * SLSA v1.2.
+ *
+ * @see https://slsa.dev/spec/v1.2/verification_summary
  */
 final class VerificationSummary implements Predicate
 {
     public const PREDICATE_TYPE = 'https://slsa.dev/verification_summary/v1';
 
     /**
+     * $timeVerified and $slsaVersion are optional in the spec (both since v1.1)
+     * and may be null; when given they must be non-empty.
+     *
      * @param list<string>              $verifiedLevels    SLSA levels reached, e.g. ["SLSA_BUILD_LEVEL_3"]
      * @param list<ResourceDescriptor>  $inputAttestations attestations the verifier consumed
      * @param array<string, int>|null   $dependencyLevels  count of dependencies at each SLSA level
      */
     public function __construct(
         public readonly Verifier $verifier,
-        public readonly string $timeVerified,
+        public readonly ?string $timeVerified,
         public readonly string $resourceUri,
         public readonly ResourceDescriptor $policy,
         public readonly VerificationResult $verificationResult,
         public readonly array $verifiedLevels,
-        public readonly string $slsaVersion,
+        public readonly ?string $slsaVersion = null,
         public readonly array $inputAttestations = [],
         public readonly ?array $dependencyLevels = null,
     ) {
@@ -60,15 +66,20 @@ final class VerificationSummary implements Predicate
     /** @return array<string, mixed> */
     public function toArray(): array
     {
-        $out = [
-            'verifier' => $this->verifier->toArray(),
-            'timeVerified' => $this->timeVerified,
-            'resourceUri' => $this->resourceUri,
-            'policy' => $this->policy->toArray(),
-            'verificationResult' => $this->verificationResult->value,
-            'verifiedLevels' => $this->verifiedLevels,
-            'slsaVersion' => $this->slsaVersion,
-        ];
+        $out = ['verifier' => $this->verifier->toArray()];
+
+        if ($this->timeVerified !== null) {
+            $out['timeVerified'] = $this->timeVerified;
+        }
+
+        $out['resourceUri'] = $this->resourceUri;
+        $out['policy'] = $this->policy->toArray();
+        $out['verificationResult'] = $this->verificationResult->value;
+        $out['verifiedLevels'] = $this->verifiedLevels;
+
+        if ($this->slsaVersion !== null) {
+            $out['slsaVersion'] = $this->slsaVersion;
+        }
 
         if ($this->inputAttestations !== []) {
             $out['inputAttestations'] = array_map(
@@ -119,12 +130,12 @@ final class VerificationSummary implements Predicate
     {
         return new self(
             verifier: Verifier::fromArray(Json::requireObject($data, 'verifier')),
-            timeVerified: Json::requireString($data, 'timeVerified'),
+            timeVerified: Json::stringOrNull($data, 'timeVerified'),
             resourceUri: Json::requireString($data, 'resourceUri'),
             policy: ResourceDescriptor::fromArray(Json::requireObject($data, 'policy')),
             verificationResult: self::result($data),
             verifiedLevels: Json::stringList($data, 'verifiedLevels'),
-            slsaVersion: Json::requireString($data, 'slsaVersion'),
+            slsaVersion: Json::stringOrNull($data, 'slsaVersion'),
             inputAttestations: Json::descriptors($data, 'inputAttestations'),
             dependencyLevels: Json::intMapOrNull($data, 'dependencyLevels'),
         );

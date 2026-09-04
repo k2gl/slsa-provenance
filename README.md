@@ -110,7 +110,8 @@ $statement = $provenance->toStatement([$subject], StatementVersion::V1); // …o
 Where provenance says *how* an artifact was built, a **Verification Summary Attestation**
 (`https://slsa.dev/verification_summary/v1`) records that a verifier *checked* it against a
 policy — which SLSA levels it reached and whether it passed. This is the attestation a
-verifier emits, carried by an in-toto Statement **v1**:
+verifier emits, carried by an in-toto Statement **v1**. The same predicate covers the
+Build track and the Source track approved in SLSA v1.2:
 
 ```php
 use K2gl\InToto\ResourceDescriptor;
@@ -125,7 +126,7 @@ $vsa = new VerificationSummary(
     policy: new ResourceDescriptor(uri: 'https://example.com/policy.yaml', digest: ['sha256' => '…']),
     verificationResult: VerificationResult::Passed,
     verifiedLevels: ['SLSA_BUILD_LEVEL_3'],
-    slsaVersion: '1.0',
+    slsaVersion: '1.0',                              // optional
     dependencyLevels: ['SLSA_BUILD_LEVEL_3' => 5],   // optional
 );
 
