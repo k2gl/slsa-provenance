@@ -132,6 +132,36 @@ final class VerificationSummaryTest extends TestCase
         fact(str_contains($json, '"version"'))->false();
     }
 
+    public function testParsesASummaryWithoutTimeVerifiedOrSlsaVersion(): void
+    {
+        // arrange: both fields are optional in the spec, and a Source-track VSA
+        // commonly leaves them out
+        $json = <<<'JSON'
+            {
+              "_type": "https://in-toto.io/Statement/v1",
+              "predicateType": "https://slsa.dev/verification_summary/v1",
+              "subject": [{"uri": "git+https://github.com/octo/repo", "digest": {"gitCommit": "deadbeef"}}],
+              "predicate": {
+                "verifier": {"id": "https://example.com/source-verifier"},
+                "resourceUri": "git+https://github.com/octo/repo",
+                "policy": {"uri": "https://example.com/policy.yaml"},
+                "verificationResult": "PASSED",
+                "verifiedLevels": ["SLSA_SOURCE_LEVEL_3"]
+              }
+            }
+            JSON;
+
+        // act
+        $vsa = VerificationSummary::fromStatement(Statement::fromJson($json));
+
+        // assert
+        fact($vsa->timeVerified)->null();
+        fact($vsa->slsaVersion)->null();
+        fact($vsa->verifiedLevels)->is(['SLSA_SOURCE_LEVEL_3']);
+        fact(str_contains(json_encode($vsa->toArray(), JSON_THROW_ON_ERROR), 'timeVerified'))->false();
+        fact(str_contains(json_encode($vsa->toArray(), JSON_THROW_ON_ERROR), 'slsaVersion'))->false();
+    }
+
     public function testEmptyDependencyLevelsSerializeAsObject(): void
     {
         $vsa = new VerificationSummary(
