@@ -28,7 +28,7 @@ final class PredicateInterfaceTest extends TestCase
     {
         $provenance = $this->sampleV1();
 
-        fact($provenance instanceof Predicate)->true();
+        fact($provenance)->instanceOf(Predicate::class);
         fact($provenance->predicateType())->is(Provenance::PREDICATE_TYPE);
     }
 
@@ -36,7 +36,7 @@ final class PredicateInterfaceTest extends TestCase
     {
         $provenance = $this->sampleV02();
 
-        fact($provenance instanceof Predicate)->true();
+        fact($provenance)->instanceOf(Predicate::class);
         fact($provenance->predicateType())->is(ProvenanceV02::PREDICATE_TYPE);
     }
 
@@ -48,7 +48,7 @@ final class PredicateInterfaceTest extends TestCase
         $statement = $this->sampleV1()->toStatement([new ResourceDescriptor(name: 'app', digest: ['sha256' => 'deadbeef'])]);
         $predicate = $statement->predicate($registry);
 
-        fact($predicate instanceof Provenance)->true();
+        fact($predicate)->instanceOf(Provenance::class);
         fact($predicate->predicateType())->is(Provenance::PREDICATE_TYPE);
     }
 
