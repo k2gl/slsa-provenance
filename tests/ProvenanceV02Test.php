@@ -149,8 +149,8 @@ final class ProvenanceV02Test extends TestCase
 
         $json = json_encode($provenance->toArray(), JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
 
-        fact(str_contains($json, '"parameters":{}'))->true();
-        fact(str_contains($json, '[]'))->false();
+        fact($json)->containsString('"parameters":{}');
+        fact($json)->notContainsString('[]');
     }
 
     public function testRejectsEmptyBuildType(): void

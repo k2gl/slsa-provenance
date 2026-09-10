@@ -108,7 +108,7 @@ final class VerificationSummaryTest extends TestCase
         fact($vsa->verificationResult)->is(VerificationResult::Passed);
         fact($vsa->verifiedLevels)->is(['SLSA_BUILD_LEVEL_3']);
         fact($vsa->policy->digestFor('sha256'))->is('c0ffee');
-        fact($vsa->inputAttestations)->is([]);
+        fact($vsa->inputAttestations)->isEmptyArray();
         fact($vsa->dependencyLevels)->null();
     }
 
@@ -126,10 +126,10 @@ final class VerificationSummaryTest extends TestCase
 
         $json = json_encode($vsa->toArray(), JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
 
-        fact(str_contains($json, '"verificationResult":"FAILED"'))->true();
-        fact(str_contains($json, 'inputAttestations'))->false();
-        fact(str_contains($json, 'dependencyLevels'))->false();
-        fact(str_contains($json, '"version"'))->false();
+        fact($json)->jsonPath('verificationResult', 'FAILED');
+        fact($json)->notContainsString('inputAttestations');
+        fact($json)->notContainsString('dependencyLevels');
+        fact($json)->notContainsString('"version"');
     }
 
     public function testParsesASummaryWithoutTimeVerifiedOrSlsaVersion(): void
@@ -158,8 +158,8 @@ final class VerificationSummaryTest extends TestCase
         fact($vsa->timeVerified)->null();
         fact($vsa->slsaVersion)->null();
         fact($vsa->verifiedLevels)->is(['SLSA_SOURCE_LEVEL_3']);
-        fact(str_contains(json_encode($vsa->toArray(), JSON_THROW_ON_ERROR), 'timeVerified'))->false();
-        fact(str_contains(json_encode($vsa->toArray(), JSON_THROW_ON_ERROR), 'slsaVersion'))->false();
+        fact(json_encode($vsa->toArray(), JSON_THROW_ON_ERROR))->notContainsString('timeVerified');
+        fact(json_encode($vsa->toArray(), JSON_THROW_ON_ERROR))->notContainsString('slsaVersion');
     }
 
     public function testEmptyDependencyLevelsSerializeAsObject(): void
@@ -177,7 +177,7 @@ final class VerificationSummaryTest extends TestCase
 
         $json = json_encode($vsa->toArray(), JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
 
-        fact(str_contains($json, '"dependencyLevels":{}'))->true();
+        fact($json)->containsString('"dependencyLevels":{}');
     }
 
     public function testRegistryResolvesVsaToTypedSummary(): void
@@ -188,7 +188,7 @@ final class VerificationSummaryTest extends TestCase
         $statement = $this->sampleVsa()->toStatement([new ResourceDescriptor(name: 'app', digest: ['sha256' => 'deadbeef'])]);
         $predicate = $statement->predicate($registry);
 
-        fact($predicate instanceof VerificationSummary)->true();
+        fact($predicate)->instanceOf(VerificationSummary::class);
         fact($predicate->predicateType())->is(VerificationSummary::PREDICATE_TYPE);
     }
 
